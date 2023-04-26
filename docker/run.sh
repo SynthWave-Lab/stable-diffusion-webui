@@ -6,7 +6,7 @@ if [ "$(which docker-compose)" ]; then
 else
 	compose='docker compose'
 fi
-
+$compose down -v
 $compose up -d
 
 echo -e "\nWait for the UI to start then point your browser to: http://localhost:$(docker ps --format '{{.Names}} {{.Ports}}' | grep 'webui' | awk '{print $2}' | sed -n -e 's/^0.0.0.0:\([0-9]*\)->.*/\1/p'
