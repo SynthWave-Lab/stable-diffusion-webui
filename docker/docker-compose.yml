@@ -2,7 +2,8 @@ version: '2.3'
 services:
   stable-diffusion-webui:
     runtime: nvidia
-    image: automatic111/stable-diffusion-webui
+    restart: always
+    image: synthwave/stable-diffusion-webui
     build:
       context: ../
       dockerfile: docker/Dockerfile
@@ -10,14 +11,14 @@ services:
       - "7860:7860"
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
+      - PYTHONUNBUFFERED=1
     volumes:
-      - ../embeddings:/stable-diffusion-webui/embeddings
-      - ../extensions:/stable-diffusion-webui/extensions
-      - ../interrogate:/stable-diffusion-webui/interrogate
-      - ../models:/stable-diffusion-webui/models
-      - ../outputs:/stable-diffusion-webui/outputs
-      - ../repositories:/stable-diffusion-webui/repositories
+      - ../:/opt/stable-diffusion-webui
       - home:/root
-    command: python3 launch.py --listen
+    command: python3 /opt/stable-diffusion-webui/launch.py --no-half-vae --listen --api # --share
 volumes:
   home:
+networks:
+  default:
+    external:
+      name: synthwave_network
